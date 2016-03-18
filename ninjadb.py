@@ -10,7 +10,7 @@ class NinjaDB:
     self.exit = False
     # SIGINT handler, exit gracefully
     signal.signal(signal.SIGINT, lambda signal, frame: sys.exit(0))
-    print("Welcome to NinjaDB 0.0.2")
+    print("Welcome to NinjaDB 0.0.3")
 
     # Initialize DB class
     self.db = DBStore()
@@ -19,7 +19,7 @@ class NinjaDB:
     # start main loop
     while not self.exit:
       try:
-        sys.stdout.write('> ')
+        #sys.stdout.write('> ')
         rawCMD = raw_input()
         args = rawCMD.strip().split(" ")
         if len(args) > 0:
@@ -46,9 +46,22 @@ class NinjaDB:
       elif args[0] == "NUMEQUALTO" and lengthIs(args, 2):
         count = self.db.getCount(args[1])
         print(count)
-      # elif cmd == "BEGIN":
-      # elif cmd == "ROLLBACK":
-      # elif cmd == "COMMIT":
+
+      elif args[0] == "BEGIN":
+        self.db.begin()
+
+      elif args[0] == "ROLLBACK":
+        if self.db.delta == -1:
+          print("NO TRANSACTION")
+        else:
+          self.db.rollback()
+
+      elif args[0] == "COMMIT":
+        if self.db.delta == -1:
+          print("NO TRANSACTION")
+        else:
+          self.db.commit()
+
       elif args[0] == "END":
         self.exit = True
         break
