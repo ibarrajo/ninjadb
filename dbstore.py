@@ -39,7 +39,7 @@ class DBStore:
       return
     else:
       oldValue = self.db.get(index)
-      self.history[self.delta].append([action, index, newValue, oldValue])
+      self.history[self.delta].extend([[action, index, newValue, oldValue]])
 
 
   # unplay the actions of the current delta and recalculate valCount
@@ -55,12 +55,12 @@ class DBStore:
       newValue = line[2]
       oldValue = line[3]
       # we need to unset if it was set
-      if instr == "SET":
+      if instr == 'SET':
         if index in self.db:
           del self.db[index]
         self.db.update({index: oldValue})
       # viceversa
-      elif instr == "UNSET":
+      elif instr == 'UNSET':
           self.db.update({index: oldValue})
     self.rebuildCounts()
     self.delta -= 1
@@ -68,7 +68,7 @@ class DBStore:
   # set up a new delta
   def begin(self):
     self.delta += 1
-    self.history.append([])
+    self.history.extend([[]])
 
   # all changes are commited, clear the history and delta level
   def commit(self):
