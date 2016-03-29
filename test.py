@@ -113,6 +113,12 @@ class TestNinjaDB(unittest.TestCase):
     lines = ['SET %s %s\nBEGIN' % (x, x) for x in xrange(1,self.maxCase)]
     self.performance_test(self.cases, lines)
 
+  def test_perf_initialize(self):
+    print('\nRunning initialization performance test %s to %s' % (self.minCase, self.maxCase))
+    # empty array
+    lines = ['' for x in xrange(1,self.maxCase)]
+    self.performance_test(self.cases, lines)
+
 
 
 if __name__ == '__main__':
